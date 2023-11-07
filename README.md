@@ -157,30 +157,34 @@ REG NO : 212222240102
 #include "main.h"
 #include"stdio.h"
 uint32_t adcvalue;
-#if defined (_ICCARM) || defined (_ARMCC_VERSION)
+#if defined (__ICCARM__) || defined (__ARMCC_VERSION)
 #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#elif defined(_GNUC_)
-   
+#elif defined(__GNUC__)
+
 #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#endif  
+#endif
 
-while(1)
+int main(void)
 {
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init();
+  MX_ADC1_Init();
+  MX_USART2_UART_Init();
 
-	HAL_ADC_Start(&hadc1);
-			HAL_ADC_PollForConversion(&hadc1,100);
-			adcvalue = HAL_ADC_GetValue(&hadc1);
-			HAL_ADC_Stop(&hadc1);
-			HAL_Delay(500);
-			printf("ADC VALUE:%ld\n",adcvalue);
-
+  while (1)
+  {
+	  HAL_ADC_Start(&hadc1);
+	  			HAL_ADC_PollForConversion(&hadc1,100);
+	  			adcvalue = HAL_ADC_GetValue(&hadc1);
+	  			HAL_ADC_Stop(&hadc1);
+	  			HAL_Delay(500);
+	  			printf("ADC VALUE:%ld\n",adcvalue);
+  }
 }
-
 PUTCHAR_PROTOTYPE
 {
-
-  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
-
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 0xFFFF);
   return ch;
 }
 ```
